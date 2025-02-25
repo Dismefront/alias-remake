@@ -98,13 +98,15 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 
---------------------
+---
 
 ### .env contents
+
 ```
 DB_PASS=
 DB_USER=
 DB_HOST=
 DB_NAME=
 DB_PORT=
+SESSION_SECRET=
 ```

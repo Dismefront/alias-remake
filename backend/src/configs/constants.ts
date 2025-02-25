@@ -1,0 +1,12 @@
+export const REPOSITORIES = {
+  category: 'CATEGORY_REPOSITORY',
+  user: 'USER_REPOSITORY',
+  game: 'GAME_REPOSITORY',
+  gameStats: 'GAMESTATS_REPOSITORY',
+  lobby: 'LOBBY_REPOSITORY',
+  guessedWord: 'GUESSED_WORD_REPOSITORY',
+  recording: 'RECORDING_REPOSITORY',
+  message: 'MESSAGE_REPOSITORY',
+  word: 'WORD_REPOSITORY',
+  userBlock: 'USER_BLOCK_REPOSITORY',
+};

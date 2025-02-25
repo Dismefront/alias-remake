@@ -1,13 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
-import { PhotoService } from './services/photo.service';
-import { Photo } from './database/photo.entity';
+import { DataService } from './data/data.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly photoService: PhotoService) {}
+  constructor(private readonly dataService: DataService) {}
 
   @Get()
-  async getHello(): Promise<Photo[]> {
-    return await this.photoService.findAll();
+  async hello() {
+    return await this.dataService.findAll();
   }
 }

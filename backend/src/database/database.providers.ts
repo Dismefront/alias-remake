@@ -16,7 +16,6 @@ export const databaseProviders: Provider[] = [
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         synchronize: true,
       });
-
       return dataSource.initialize();
     },
     inject: [ConfigService],
