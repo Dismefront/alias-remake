@@ -2,16 +2,17 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-    name: "App",
-    setup() {
-        const message = "nigga";
-        return {
-            message
-        }
-    },
+  name: 'App',
+  setup() {
+    const message = 'nigga';
+    return {
+      message,
+    };
+  },
 });
 </script>
 
 <template>
-  <h1>{{ message }}</h1>
+  asdfasdf
+  <router-view />
 </template>

@@ -8,6 +8,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  });
+
   app.use(
     session({
       secret: configService.get('SESSION_SECRET') as string,

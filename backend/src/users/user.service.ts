@@ -21,6 +21,12 @@ export class UserService {
     });
   }
 
+  async findById(id: number): Promise<User | null> {
+    return this.userRepository.findOne({
+      where: { user_id: id },
+    });
+  }
+
   async addNew(username: string, password: string) {
     const user = new User();
     user.username = username;
