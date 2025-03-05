@@ -1,4 +1,12 @@
-import { Body, Controller, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Post,
+  Req,
+  Res,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
 import { UserCredentials } from 'src/common/interfaces';
 import { UserService } from './user.service';
@@ -30,5 +38,10 @@ export class UserController {
         message: 'User registered successfully',
       });
     });
+  }
+
+  @Get('me')
+  getUser(@Req() request: Request) {
+    return request.session.user;
   }
 }

@@ -13,7 +13,7 @@ export class SessionSerializer extends PassportSerializer {
     return user ? done(null, user) : done(null, null);
   }
 
-  serializeUser(user: User, done: (a: null, b: User | null) => void) {
-    done(null, user);
+  serializeUser(user: User, done: (a: null, b: number | undefined) => void) {
+    done(null, user.user_id);
   }
 }

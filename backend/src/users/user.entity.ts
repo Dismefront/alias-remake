@@ -8,7 +8,7 @@ import { GuessedWord } from 'src/words/guessed-word.entity';
 @Entity('is_cw_user')
 export class User {
   @PrimaryGeneratedColumn()
-  user_id: number;
+  user_id?: number;
 
   @Column({ unique: true })
   username: string;

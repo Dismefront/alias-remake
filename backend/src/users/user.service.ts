@@ -21,6 +21,10 @@ export class UserService {
     });
   }
 
+  async saveUserBlock(userBlock: UserBlock) {
+    return this.userBlockRepository.save(userBlock);
+  }
+
   async findById(id: number): Promise<User | null> {
     return this.userRepository.findOne({
       where: { user_id: id },

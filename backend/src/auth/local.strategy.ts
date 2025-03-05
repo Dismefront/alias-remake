@@ -17,6 +17,8 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new UnauthorizedException();
     }
+    //@ts-expect-error password_hash is private
+    delete user.password_hash;
     return user;
   }
 }

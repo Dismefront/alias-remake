@@ -10,7 +10,7 @@ import { User } from './user.entity';
 @Entity('is_cw_user_block')
 export class UserBlock {
   @PrimaryGeneratedColumn()
-  block_id: number;
+  block_id?: number;
 
   @Column()
   cause: string;
