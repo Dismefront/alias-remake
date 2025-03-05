@@ -1,7 +1,9 @@
 <script setup>
 import router, { ROUTE_NAMES } from '@/router';
 import { postLogin, postRegister } from '@/services/api';
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
+import { toast } from 'vue3-toastify';
+import Cookie from 'js-cookie';
 
 const loginUsername = ref('');
 const loginPassword = ref('');
@@ -18,9 +20,13 @@ const registerError = reactive({
 const validateLogin = () => {
   loginError.value = !loginUsername.value || !loginPassword.value;
   if (!loginError.value) {
-    postLogin(loginUsername.value, loginPassword.value).then(() => {
-      router.push(ROUTE_NAMES.HOME);
-    });
+    postLogin(loginUsername.value, loginPassword.value)
+      .then(() => {
+        router.push({ name: ROUTE_NAMES.HOME });
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
   }
 };
 
@@ -37,9 +43,13 @@ const validateRegister = () => {
       registerError.repeatPassword
     )
   ) {
-    postRegister(registerUsername.value, registerPassword.value).then(() => {
-      router.push(ROUTE_NAMES.HOME);
-    });
+    postRegister(registerUsername.value, registerPassword.value)
+      .then(() => {
+        router.push({ name: ROUTE_NAMES.HOME });
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
   }
 };
 </script>

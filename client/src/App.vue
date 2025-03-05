@@ -13,6 +13,5 @@ export default defineComponent({
 </script>
 
 <template>
-  asdfasdf
   <router-view />
 </template>
