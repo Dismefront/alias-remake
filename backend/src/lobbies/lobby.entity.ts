@@ -49,7 +49,7 @@ export class Lobby {
   @Column({ nullable: true })
   max_rounds: number;
 
-  @ManyToOne(() => Lobby, (lobby) => lobby.master_id)
+  @ManyToOne(() => Lobby, (lobby) => lobby.master_id, { nullable: true })
   @JoinColumn({ name: 'master_id' })
   master_id: Lobby;
 

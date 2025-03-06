@@ -1,13 +1,16 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { GuessedWord } from './guessed-word.entity';
 import { Category } from 'src/categories/category.entity';
+import { User } from 'src/users/user.entity';
 
 @Entity('is_cw_word')
 export class Word {
@@ -19,6 +22,10 @@ export class Word {
 
   @Column({ default: false })
   is_approved: boolean;
+
+  @OneToOne(() => User, { nullable: true })
+  @JoinColumn()
+  suggested_by: User;
 
   @OneToMany(() => GuessedWord, (guessedWord) => guessedWord.word_id)
   guessed_words: GuessedWord[];
