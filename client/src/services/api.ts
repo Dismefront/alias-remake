@@ -1,5 +1,6 @@
 import type { UserStore } from '@/types/data';
 import axios from 'axios';
+import type { CreateCategoryReq } from './interfaces';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -13,11 +14,14 @@ const apiClient = axios.create({
 
 export const postRegister = async (username: string, password: string) => {
   try {
-    const response = apiClient.post('user/register', {
-      username,
-      password,
-    });
-    return (await response).data as { ok: boolean };
+    const response = await apiClient.post<{ message: string }>(
+      'user/register',
+      {
+        username,
+        password,
+      },
+    );
+    return response.data;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error: any) {
     throw new Error('The user with these credentials already exists');
@@ -26,11 +30,11 @@ export const postRegister = async (username: string, password: string) => {
 
 export const postLogin = async (username: string, password: string) => {
   try {
-    const response = apiClient.post('auth/login', {
+    const response = await apiClient.post<{ message: string }>('auth/login', {
       username,
       password,
     });
-    return (await response).data as { ok: boolean };
+    return response.data;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     throw new Error('Invalid login or password');
@@ -39,9 +43,8 @@ export const postLogin = async (username: string, password: string) => {
 
 export const getUserInfo = async (): Promise<UserStore> => {
   try {
-    const response = apiClient.get('user/me');
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return ((await response) as any).data;
+    const response = await apiClient.get<UserStore>('user/me');
+    return response.data;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     throw new Error('You are not logged in');
@@ -54,5 +57,18 @@ export const postLogout = async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     throw new Error('could not log out');
+  }
+};
+
+export const postCreateCollection = async (data: CreateCategoryReq) => {
+  try {
+    const response = await apiClient.post<CreateCategoryReq>(
+      'categories/create',
+      data,
+    );
+    return response.data;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    throw new Error('Could not create collection');
   }
 };

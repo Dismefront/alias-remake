@@ -1,13 +1,12 @@
-<script setup>
-import { getUserInfo } from '@/services/api';
+<script setup lang="ts">
+import { ROUTE_NAMES } from '@/router';
 import { useUserStore } from '@/services/userStore';
-import { onBeforeMount } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
 const goToProfile = () => {
-  router.push(`/profile/${userStore.user.username}`);
+  router.push(`/profile/${userStore.user!.username}`);
 };
 
 const userStore = useUserStore();
@@ -20,11 +19,12 @@ const userStore = useUserStore();
     <h1 class="text-3xl font-bold mb-6 text-blue-600 flex">
       Hello,&nbsp;
       <div class="cursor-pointer hover:underline" @click="goToProfile">
-        {{ userStore.user.username }}
+        {{ userStore.user!.username }}
       </div>
     </h1>
     <div class="flex flex-col space-y-4 w-64">
       <button
+        @click="router.push({ name: ROUTE_NAMES.LOBBY_CREATE })"
         class="cursor-pointer w-full bg-blue-500 text-white py-2 rounded-md"
       >
         Create Lobby
@@ -36,6 +36,7 @@ const userStore = useUserStore();
       </button>
       <button
         class="cursor-pointer w-full bg-yellow-500 text-white py-2 rounded-md"
+        @click="router.push({ name: ROUTE_NAMES.COLLECTION_CREATE })"
       >
         Create Collection
       </button>

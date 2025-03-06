@@ -7,11 +7,15 @@ import Main from '@/pages/Main.vue';
 import Login from '@/pages/Login.vue';
 import { useUserStore } from '@/services/userStore';
 import Profile from '@/pages/Profile.vue';
+import LobbyCreate from '@/pages/LobbyCreate.vue';
+import CreateCollection from '@/pages/CreateCollection.vue';
 
 export const ROUTE_NAMES = {
   HOME: 'Home',
   LOGIN: 'Login',
   PROFILE: 'Profile',
+  LOBBY_CREATE: 'Create lobby',
+  COLLECTION_CREATE: 'Create collection',
 };
 
 const routes: Array<RouteRecordRaw> = [
@@ -32,6 +36,18 @@ const routes: Array<RouteRecordRaw> = [
     name: ROUTE_NAMES.LOGIN,
     component: Login,
   },
+  {
+    path: '/lobby/create',
+    name: ROUTE_NAMES.LOBBY_CREATE,
+    component: LobbyCreate,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/collection/create',
+    name: ROUTE_NAMES.COLLECTION_CREATE,
+    component: CreateCollection,
+    meta: { requiresAuth: true },
+  },
 ];
 
 const router = createRouter({
@@ -39,7 +55,7 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, _from, next) => {
   const authStore = useUserStore();
   if (
     to.meta.requiresAuth &&

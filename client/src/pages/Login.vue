@@ -1,9 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import router, { ROUTE_NAMES } from '@/router';
 import { postLogin, postRegister } from '@/services/api';
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive } from 'vue';
 import { toast } from 'vue3-toastify';
-import Cookie from 'js-cookie';
 
 const loginUsername = ref('');
 const loginPassword = ref('');
