@@ -7,10 +7,10 @@ import {
 import { Request } from 'express';
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class AppAuthGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request: Request = context.switchToHttp().getRequest();
-    if (request.session && request.session.user) {
+    if (request.session?.user) {
       return true;
     }
     throw new UnauthorizedException('You are not logged in');

@@ -4,8 +4,8 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { GuessedWord } from './guessed-word.entity';
@@ -20,10 +20,10 @@ export class Word {
   @Column()
   content: string;
 
-  @Column({ default: false })
+  @Column({ default: false, nullable: true })
   is_approved: boolean;
 
-  @OneToOne(() => User, { nullable: true })
+  @ManyToOne(() => User, { nullable: true })
   @JoinColumn()
   suggested_by: User;
 

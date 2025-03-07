@@ -6,10 +6,12 @@ import {
   Post,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { UserCredentials } from 'src/common/interfaces';
 import { UserService } from './user.service';
+import { AppAuthGuard } from 'src/auth/auth.guard';
 
 @Controller('user')
 export class UserController {
@@ -40,6 +42,7 @@ export class UserController {
     });
   }
 
+  @UseGuards(AppAuthGuard)
   @Get('me')
   getUser(@Req() request: Request) {
     return request.session.user;

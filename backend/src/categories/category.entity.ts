@@ -6,7 +6,7 @@ import {
   Entity,
   JoinColumn,
   ManyToMany,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -37,7 +37,7 @@ export class Category {
   @ManyToMany(() => Lobby, (lobby) => lobby.categories)
   lobbies: Lobby[];
 
-  @OneToOne(() => User, { nullable: true })
+  @ManyToOne(() => User, { nullable: true })
   @JoinColumn()
   created_by: User;
 

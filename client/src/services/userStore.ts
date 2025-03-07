@@ -13,9 +13,14 @@ export const useUserStore = defineStore('userStore', {
 
   actions: {
     async fetchUser() {
-      const user = await getUserInfo();
-      this.user = user;
-      return user;
+      try {
+        const user = await getUserInfo();
+        this.user = user;
+        return user;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
+        return null;
+      }
     },
 
     removeUser() {

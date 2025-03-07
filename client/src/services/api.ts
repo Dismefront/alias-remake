@@ -1,6 +1,6 @@
 import type { UserStore } from '@/types/data';
 import axios from 'axios';
-import type { CreateCategoryReq } from './interfaces';
+import type { CreateCategoryReq, GetAllCollectionsRes } from './interfaces';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -67,8 +67,22 @@ export const postCreateCollection = async (data: CreateCategoryReq) => {
       data,
     );
     return response.data;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (error) {
-    throw new Error('Could not create collection');
+  } catch (error: any) {
+    throw new Error(
+      error?.response?.data?.message || 'Could not create collection',
+    );
+  }
+};
+
+export const getAllCollections = async () => {
+  try {
+    const response = await apiClient.get<GetAllCollectionsRes>(
+      'categories/get-user-available',
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(
+      error?.response?.data?.message || 'Could not fetch collections',
+    );
   }
 };

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, defineProps, reactive, watch } from 'vue';
+import { ref, reactive, watch } from 'vue';
 
 const { tags } = defineProps<{
   tags: { words: string[]; collections: string[] };

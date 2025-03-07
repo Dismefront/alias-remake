@@ -4,6 +4,7 @@ import { Lobby } from 'src/lobbies/lobby.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { UserBlock } from './user-block.entity';
 import { GuessedWord } from 'src/words/guessed-word.entity';
+import { Category } from 'src/categories/category.entity';
 
 @Entity('is_cw_user')
 export class User {
@@ -39,4 +40,7 @@ export class User {
 
   @OneToMany(() => GuessedWord, (guessedWord) => guessedWord.guessed_by)
   guessed_words: GuessedWord[];
+
+  @OneToMany(() => Category, (created_category) => created_category.created_by)
+  created_categories: Category[];
 }

@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { onBeforeMount, reactive, ref } from 'vue';
 import LabelsField from '@/components/labelsField/LabelsField.vue';
-import { postCreateCollection } from '@/services/api';
+import { getAllCollections, postCreateCollection } from '@/services/api';
 import type { CreateCategoryReq } from '@/services/interfaces';
+import { toast } from 'vue3-toastify';
 
 const collectionName = ref('');
 const collectionType = ref('');
@@ -12,14 +13,19 @@ const includeCollection = ref('');
 const collectionTypeOptions: { option: string; value: string }[] = [
   {
     option: 'Visible to all players',
-    value: 'private_public',
+    value: 'local_public',
   },
   {
     option: 'Visible to me only',
-    value: 'private_private',
+    value: 'local_local',
   },
 ];
-const availableCollections = ['Collection A', 'Collection B', 'Collection C'];
+const availableCollections = ref<string[]>([]);
+onBeforeMount(async () => {
+  availableCollections.value = (await getAllCollections()).map(
+    (collection) => collection.category_name,
+  );
+});
 
 const errors = ref({
   collectionName: '',
@@ -58,7 +64,11 @@ const createCollection = () => {
       includeWords: tags.words,
       includeCategories: tags.collections,
     };
-    postCreateCollection(bodyData).then((data) => console.log(data));
+    postCreateCollection(bodyData)
+      .then((data) => console.log(data))
+      .catch((error) => {
+        toast.error(error.message);
+      });
   }
 };
 
