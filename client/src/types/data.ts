@@ -1,9 +1,16 @@
+export interface WordStore {
+  word_id: number;
+  content: string;
+  is_approved: boolean | null;
+}
+
 export interface UserStore {
   created_at: Date;
   is_blocked: boolean;
   role: string;
   user_id: number;
   username: string;
+  suggested_words?: WordStore[];
 }
 
 export enum CategoryType {

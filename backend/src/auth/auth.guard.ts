@@ -10,7 +10,7 @@ import { Request } from 'express';
 export class AppAuthGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request: Request = context.switchToHttp().getRequest();
-    if (request.session?.user) {
+    if (request.session?.user && !request.session.user.is_blocked) {
       return true;
     }
     throw new UnauthorizedException('You are not logged in');

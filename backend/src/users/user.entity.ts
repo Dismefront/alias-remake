@@ -5,6 +5,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { UserBlock } from './user-block.entity';
 import { GuessedWord } from 'src/words/guessed-word.entity';
 import { Category } from 'src/categories/category.entity';
+import { Word } from 'src/words/word.entity';
 
 @Entity('is_cw_user')
 export class User {
@@ -43,4 +44,7 @@ export class User {
 
   @OneToMany(() => Category, (created_category) => created_category.created_by)
   created_categories: Category[];
+
+  @OneToMany(() => Word, (suggested_word) => suggested_word.suggested_by)
+  suggested_words: Word[];
 }

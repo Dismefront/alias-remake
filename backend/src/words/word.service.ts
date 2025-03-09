@@ -21,6 +21,15 @@ export class WordService {
     return await this.wordRepository.save(word);
   }
 
+  async updateStatus(word_id: number, is_approved: boolean) {
+    return await this.wordRepository.update(
+      { word_id },
+      {
+        is_approved,
+      },
+    );
+  }
+
   async update(word: Word) {
     return await this.wordRepository.save(word);
   }

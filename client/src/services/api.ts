@@ -1,4 +1,4 @@
-import type { UserStore } from '@/types/data';
+import type { UserStore, WordStore } from '@/types/data';
 import axios from 'axios';
 import type { CreateCategoryReq, GetAllCollectionsRes } from './interfaces';
 
@@ -83,6 +83,51 @@ export const getAllCollections = async () => {
   } catch (error: any) {
     throw new Error(
       error?.response?.data?.message || 'Could not fetch collections',
+    );
+  }
+};
+
+export const getUserProfile = async (username: string) => {
+  try {
+    const response = await apiClient.get<UserStore>(`user/get-one/${username}`);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error?.response?.data?.message || 'Could not fetch user');
+  }
+};
+
+export const postUpdateWordStatus = async (
+  word_id: number,
+  is_approved: boolean,
+) => {
+  try {
+    const response = await apiClient.post<WordStore>(`word/change-status`, {
+      word_id,
+      is_approved,
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(
+      error?.response?.data?.message || 'Could not update the word status',
+    );
+  }
+};
+
+export const postChangeUserBlockStatus = async (
+  user_id: number,
+  is_blocked: boolean,
+  cause: string,
+) => {
+  try {
+    const response = await apiClient.post<{ ok: boolean }>(`user/block`, {
+      user_id,
+      is_blocked,
+      cause,
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(
+      error?.response?.data?.message || 'Could not update the word status',
     );
   }
 };

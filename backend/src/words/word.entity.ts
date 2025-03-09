@@ -1,7 +1,6 @@
 import {
   Column,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -23,8 +22,7 @@ export class Word {
   @Column({ default: null, nullable: true })
   is_approved: boolean;
 
-  @ManyToOne(() => User, { nullable: true })
-  @JoinColumn()
+  @ManyToOne(() => User, (user) => user.suggested_words, { nullable: true })
   suggested_by: User;
 
   @OneToMany(() => GuessedWord, (guessedWord) => guessedWord.word_id)

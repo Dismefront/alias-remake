@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpStatus,
+  Param,
   Post,
   Req,
   Res,
@@ -44,7 +45,39 @@ export class UserController {
 
   @UseGuards(AppAuthGuard)
   @Get('me')
-  getUser(@Req() request: Request) {
+  getOwnUser(@Req() request: Request) {
     return request.session.user;
+  }
+
+  @UseGuards(AppAuthGuard)
+  @Get('get-one/:username')
+  async getUser(@Param('username') username: string) {
+    const data = await this.userService.findOnesFullInfo(username);
+    if (data === null) return data;
+    //@ts-expect-error rem ph
+    delete data.password_hash;
+    return data;
+  }
+
+  @UseGuards(AppAuthGuard)
+  @Post('block')
+  async blockUser(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Body() body: { user_id: number; is_blocked: boolean; cause: string },
+  ) {
+    if (!req.session.user || req.session.user.role !== 'ADMIN') {
+      res
+        .status(HttpStatus.UNPROCESSABLE_ENTITY)
+        .send('You are not able to block this user');
+      return;
+    }
+    await this.userService.changeBlockStatus(
+      body.user_id,
+      body.is_blocked,
+      req.session.user.user_id!,
+      body.cause,
+    );
+    res.status(200).send();
   }
 }

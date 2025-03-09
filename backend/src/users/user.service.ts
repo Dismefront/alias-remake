@@ -21,6 +21,34 @@ export class UserService {
     });
   }
 
+  async changeBlockStatus(
+    user_id: number,
+    is_blocked: boolean,
+    blocked_by: number,
+    cause: string,
+  ) {
+    if (is_blocked) {
+      return await this.userBlockRepository.save({
+        blocked_user: { user_id },
+        blocked_by: { user_id: blocked_by },
+        timestamp: new Date(),
+        cause,
+      });
+    } else {
+      return await this.userRepository.update(
+        { user_id },
+        { is_blocked: false },
+      );
+    }
+  }
+
+  async findOnesFullInfo(username: string): Promise<User | null> {
+    return this.userRepository.findOne({
+      where: { username },
+      relations: ['suggested_words'],
+    });
+  }
+
   async saveUserBlock(userBlock: UserBlock) {
     return this.userBlockRepository.save(userBlock);
   }
