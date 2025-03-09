@@ -3,6 +3,7 @@ import { onBeforeMount, reactive, ref } from 'vue';
 import LabelsField from '@/components/labelsField/LabelsField.vue';
 import { getAllCollections, postCreateCollection } from '@/services/api';
 import type { CreateCategoryReq } from '@/services/interfaces';
+import router, { ROUTE_NAMES } from '@/router';
 import { toast } from 'vue3-toastify';
 
 const collectionName = ref('');
@@ -65,7 +66,11 @@ const createCollection = () => {
       includeCategories: tags.collections,
     };
     postCreateCollection(bodyData)
-      .then((data) => console.log(data))
+      .then((data) => {
+        router.push({ name: ROUTE_NAMES.HOME }).then(() => {
+          data.message && toast.success(data.message);
+        });
+      })
       .catch((error) => {
         toast.error(error.message);
       });

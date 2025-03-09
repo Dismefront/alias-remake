@@ -83,4 +83,4 @@ dist-ssr
 *.sw?
 
 .history
-
+.mypy_cache

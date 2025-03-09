@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { REPOSITORIES } from 'src/configs/constants';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { Category, CategoryType } from './category.entity';
 import { User } from 'src/users/user.entity';
 import { WordService } from 'src/words/word.service';
@@ -16,6 +16,15 @@ export class CategoryService {
 
   async findAll() {
     return this.categoryRepository.find();
+  }
+
+  async findUnapproved() {
+    return this.categoryRepository.find({
+      where: {
+        is_approved: IsNull(),
+      },
+      relations: ['words'],
+    });
   }
 
   async fetchAllWordsFromCategory(category: Category) {
@@ -39,6 +48,10 @@ export class CategoryService {
     return await this.categoryRepository.findOne({
       where: { category_name: name },
     });
+  }
+
+  async updateMany(category: Category[]) {
+    return this.categoryRepository.save(category);
   }
 
   async addWordsToCategory(category: Category, words: string[]) {

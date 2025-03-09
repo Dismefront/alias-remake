@@ -42,5 +42,5 @@ export class Category {
   created_by: User;
 
   @Column({ nullable: true })
-  is_approved: boolean;
+  is_approved?: boolean;
 }

@@ -20,7 +20,7 @@ export class Word {
   @Column()
   content: string;
 
-  @Column({ default: false, nullable: true })
+  @Column({ default: null, nullable: true })
   is_approved: boolean;
 
   @ManyToOne(() => User, { nullable: true })

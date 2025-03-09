@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { REPOSITORIES } from 'src/configs/constants';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { Word } from './word.entity';
 import { GuessedWord } from './guessed-word.entity';
 import { User } from 'src/users/user.entity';
@@ -23,6 +23,10 @@ export class WordService {
 
   async update(word: Word) {
     return await this.wordRepository.save(word);
+  }
+
+  async updateMany(words: Word[]) {
+    return await this.wordRepository.save(words);
   }
 
   async findOne(content: string) {
@@ -50,6 +54,14 @@ export class WordService {
         },
       },
       relations: ['categories'],
+    });
+  }
+
+  async findAllUnapproved() {
+    return await this.wordRepository.find({
+      where: {
+        is_approved: IsNull(),
+      },
     });
   }
 }

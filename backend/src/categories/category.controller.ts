@@ -36,7 +36,9 @@ export class CategoryController {
         collectionType,
         user,
       );
-      res.send(newCategory);
+      res.send({
+        message: `Collection ${collectionName} successfully created and yet to be approved`,
+      });
       void this.categoryService.addWordsToCategory(
         newCategory,
         createCategoryReq.includeWords,

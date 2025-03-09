@@ -62,7 +62,7 @@ export const postLogout = async () => {
 
 export const postCreateCollection = async (data: CreateCategoryReq) => {
   try {
-    const response = await apiClient.post<CreateCategoryReq>(
+    const response = await apiClient.post<{ message: string }>(
       'categories/create',
       data,
     );
