@@ -1,12 +1,23 @@
 <script setup lang="ts">
 import { ROUTE_NAMES } from '@/router';
 import { useUserStore } from '@/services/userStore';
+import SuggestWordModal from '@/widgets/suggets-word/SuggestWordModal.vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
 const goToProfile = () => {
   router.push(`/profile/${userStore.user!.username}`);
+};
+
+const show = ref<boolean>(true);
+const handleClose = () => {
+  show.value = false;
+};
+
+const handleOpen = () => {
+  show.value = true;
 };
 
 const userStore = useUserStore();
@@ -42,9 +53,11 @@ const userStore = useUserStore();
       </button>
       <button
         class="cursor-pointer w-full bg-purple-500 text-white py-2 rounded-md"
+        @click="handleOpen"
       >
         Propose
       </button>
     </div>
+    <SuggestWordModal v-if="show" @close="handleClose" @open="handleOpen" />
   </div>
 </template>
