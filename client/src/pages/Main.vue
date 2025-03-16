@@ -11,13 +11,18 @@ const goToProfile = () => {
   router.push(`/profile/${userStore.user!.username}`);
 };
 
-const show = ref<boolean>(true);
+const showSuggestModal = ref<boolean>(false);
+
 const handleClose = () => {
-  show.value = false;
+  showSuggestModal.value = false;
 };
 
 const handleOpen = () => {
-  show.value = true;
+  showSuggestModal.value = true;
+};
+
+const handleSubmit = () => {
+  showSuggestModal.value = false;
 };
 
 const userStore = useUserStore();
@@ -58,6 +63,11 @@ const userStore = useUserStore();
         Propose
       </button>
     </div>
-    <SuggestWordModal v-if="show" @close="handleClose" @open="handleOpen" />
+    <SuggestWordModal
+      v-if="showSuggestModal"
+      @close="handleClose"
+      @open="handleOpen"
+      @submit="handleSubmit"
+    />
   </div>
 </template>

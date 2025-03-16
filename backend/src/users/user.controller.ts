@@ -13,6 +13,7 @@ import { Request, Response } from 'express';
 import { UserCredentials } from 'src/common/interfaces';
 import { UserService } from './user.service';
 import { AppAuthGuard } from 'src/auth/auth.guard';
+import { AdminOnly } from 'src/auth/admin-only.guard';
 
 @Controller('user')
 export class UserController {
@@ -60,22 +61,17 @@ export class UserController {
   }
 
   @UseGuards(AppAuthGuard)
+  @UseGuards(AdminOnly)
   @Post('block')
   async blockUser(
     @Req() req: Request,
     @Res() res: Response,
     @Body() body: { user_id: number; is_blocked: boolean; cause: string },
   ) {
-    if (!req.session.user || req.session.user.role !== 'ADMIN') {
-      res
-        .status(HttpStatus.UNPROCESSABLE_ENTITY)
-        .send('You are not able to block this user');
-      return;
-    }
     await this.userService.changeBlockStatus(
       body.user_id,
       body.is_blocked,
-      req.session.user.user_id!,
+      req.session.user!.user_id!,
       body.cause,
     );
     res.status(200).send();

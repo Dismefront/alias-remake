@@ -7,6 +7,7 @@ import { GuessedWord } from 'src/words/guessed-word.entity';
 import { Category } from 'src/categories/category.entity';
 import { Word } from 'src/words/word.entity';
 
+type Roles = 'DEFAULT' | 'ADMIN';
 @Entity('is_cw_user')
 export class User {
   @PrimaryGeneratedColumn()
@@ -18,8 +19,8 @@ export class User {
   @Column()
   password_hash: string;
 
-  @Column({ default: 'DEFAULT' })
-  role: string;
+  @Column({ default: 'DEFAULT', enum: ['DEFAULT', 'ADMIN'] })
+  role: Roles;
 
   @Column({ default: false })
   is_blocked: boolean;

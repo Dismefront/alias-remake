@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { REPOSITORIES } from 'src/configs/constants';
 import { IsNull, Repository } from 'typeorm';
 import { Category, CategoryType } from './category.entity';
@@ -31,6 +31,22 @@ export class CategoryService {
     return this.wordService.findAllFromCategory(category);
   }
 
+  async updateCategoryType(categoryId: number, newType: CategoryType) {
+    const category = await this.categoryRepository.findOne({
+      where: { category_id: categoryId },
+    });
+    if (!category) {
+      throw new ConflictException(`Category with id ${categoryId} not found`);
+    }
+    if (!category.is_approved && newType === CategoryType.PUBLIC_PUBLIC) {
+      throw new ConflictException(
+        `Cannot update ${category.category_name} because it is not approved`,
+      );
+    }
+    category.category_type = newType;
+    return this.categoryRepository.save(category);
+  }
+
   async findUserAvailable(userId: number) {
     return await this.categoryRepository
       .createQueryBuilder('category')
@@ -52,6 +68,43 @@ export class CategoryService {
 
   async updateMany(category: Category[]) {
     return this.categoryRepository.save(category);
+  }
+
+  async suggestWordToCategory(
+    category_id: number,
+    word: string,
+    suggested_by: number,
+  ) {
+    const foundCategory = await this.categoryRepository.findOne({
+      where: {
+        category_id,
+        words: {
+          content: word,
+        },
+      },
+    });
+    if (foundCategory !== null) {
+      throw new ConflictException(
+        `The word has already been suggested to ${foundCategory.category_name}`,
+      );
+    }
+
+    await this.wordService
+      .save(word, { user_id: suggested_by } as User)
+      .catch(() => {
+        return this.wordService.findOneWithCategories(word);
+      })
+      .then((word) => {
+        if (!word) {
+          return;
+        }
+        if (word?.categories) {
+          word.categories.push({ category_id } as Category);
+        } else {
+          word.categories = [{ category_id } as Category];
+        }
+        void this.wordService.update(word);
+      });
   }
 
   async addWordsToCategory(category: Category, words: string[]) {

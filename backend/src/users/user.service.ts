@@ -45,7 +45,7 @@ export class UserService {
   async findOnesFullInfo(username: string): Promise<User | null> {
     return this.userRepository.findOne({
       where: { username },
-      relations: ['suggested_words'],
+      relations: ['suggested_words', 'created_categories'],
     });
   }
 

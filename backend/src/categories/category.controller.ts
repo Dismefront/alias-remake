@@ -9,10 +9,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { CreateCategoryReq } from 'src/common/interfaces';
+import { CreateCategoryReq, SuggestWordReq } from 'src/common/interfaces';
 import { WordService } from 'src/words/word.service';
 import { CategoryService } from './category.service';
 import { AppAuthGuard } from 'src/auth/auth.guard';
+import { CategoryType } from './category.entity';
+import { AdminOnly } from 'src/auth/admin-only.guard';
 
 @Controller('categories')
 @UseGuards(AppAuthGuard)
@@ -78,5 +80,53 @@ export class CategoryController {
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .send({ message: 'Failed to retrieve collections' });
     }
+  }
+
+  @Get('public')
+  async getPublicCategories(@Req() req: Request, @Res() res: Response) {
+    try {
+      const collections = await this.categoryService.findUserAvailable(
+        req.session.user!.user_id!,
+      );
+      res.send(collections);
+    } catch (error: any) {
+      console.log(error);
+      res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send({ message: 'Failed to retrieve collections' });
+    }
+  }
+
+  @Post('suggest-one-word')
+  async suggestOneWord(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Body() body: SuggestWordReq,
+  ) {
+    await this.categoryService.suggestWordToCategory(
+      body.categoryId,
+      body.content,
+      req.session.user!.user_id!,
+    );
+    res.send({
+      message: `${body.content} is sent for approval`,
+    });
+  }
+
+  @Post('change-type')
+  @UseGuards(AdminOnly)
+  async updateCategoryType(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Body() body: { categoryId: number; newType: CategoryType },
+  ) {
+    const updatedCategory = await this.categoryService.updateCategoryType(
+      body.categoryId,
+      body.newType,
+    );
+    res.send({
+      message: `Category type updated to ${body.newType}`,
+      updatedCategory,
+    });
   }
 }

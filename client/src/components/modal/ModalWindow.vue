@@ -2,12 +2,18 @@
 import { defineEmits } from 'vue';
 
 const props = defineProps<{ title: string }>();
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close', 'submit']);
 </script>
 
 <template>
-  <div class="fixed inset-1 bg-gray-400/50 flex items-center justify-center">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+  <div
+    @click="() => emit('close')"
+    class="fixed inset-1 bg-gray-400/50 flex items-center justify-center"
+  >
+    <div
+      @click="(e) => e.stopPropagation()"
+      class="bg-white p-6 rounded-lg shadow-lg w-96"
+    >
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-bold">{{ props.title }}</h2>
         <button
@@ -28,7 +34,7 @@ const emit = defineEmits(['close']);
           Close
         </button>
         <button
-          @click="emit('close')"
+          @click="emit('submit')"
           class="bg-green-500 text-white px-4 py-2 rounded-md cursor-pointer"
         >
           Apply

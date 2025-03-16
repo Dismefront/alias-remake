@@ -8,3 +8,8 @@ export interface CreateCategoryReq {
 }
 
 export type GetAllCollectionsRes = CollectionStore[];
+
+export interface SuggestOneWordReq {
+  categoryId: number;
+  content: string;
+}

@@ -11,6 +11,7 @@ export interface UserStore {
   user_id: number;
   username: string;
   suggested_words?: WordStore[];
+  created_categories?: CollectionStore[];
 }
 
 export enum CategoryType {

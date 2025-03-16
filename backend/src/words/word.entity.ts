@@ -16,7 +16,7 @@ export class Word {
   @PrimaryGeneratedColumn()
   word_id: number;
 
-  @Column()
+  @Column({ unique: true })
   content: string;
 
   @Column({ default: null, nullable: true })

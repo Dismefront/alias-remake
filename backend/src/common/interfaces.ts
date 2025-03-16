@@ -11,3 +11,8 @@ export interface CreateCategoryReq {
   includeWords: string[];
   includeCategories: string[];
 }
+
+export interface SuggestWordReq {
+  content: string;
+  categoryId: number;
+}

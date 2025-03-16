@@ -3,12 +3,14 @@ import {
   getUserProfile,
   postChangeUserBlockStatus,
   postLogout,
+  postUpdateCategoryType,
   postUpdateWordStatus,
 } from '@/services/api';
 import { useUserStore } from '@/services/userStore';
-import type { UserStore, WordStore } from '@/types/data';
+import { CategoryType, type UserStore, type WordStore } from '@/types/data';
 import { onBeforeMount, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { toast } from 'vue3-toastify';
 
 const router = useRouter();
 
@@ -22,13 +24,6 @@ const logout = async () => {
 const user = reactive<UserStore>({} as UserStore);
 const myUser = useUserStore();
 const isAdmin = myUser.user?.role === 'ADMIN';
-
-const gameHistory = reactive([
-  { game: 'Chess', result: 'Win', date: '2024-02-15' },
-  { game: 'Poker', result: 'Lose', date: '2024-02-16' },
-  { game: 'Checkers', result: 'Win', date: '2024-02-17' },
-  { game: 'Go', result: 'Draw', date: '2024-02-18' },
-]);
 
 onBeforeMount(async () => {
   const userData = await getUserProfile(route.params.username as string);
@@ -47,6 +42,21 @@ const changeUserBlockStatus = (user_id: number, is_blocked: boolean) => {
       user.is_blocked = is_blocked;
     },
   );
+};
+
+const trimWord = (word: string) => {
+  return word.length > 20 ? `${word.slice(0, 20)}...` : word;
+};
+
+const userReadableCollectionType = (type: CategoryType) => {
+  switch (type) {
+    case CategoryType.PUBLIC_PUBLIC:
+      return 'Public';
+    case CategoryType.LOCAL_LOCAL:
+      return 'User visible only';
+    case CategoryType.LOCAL_PUBLIC:
+      return 'Custom';
+  }
 };
 </script>
 
@@ -94,10 +104,10 @@ const changeUserBlockStatus = (user_id: number, is_blocked: boolean) => {
       </button>
     </div>
 
-    <div class="bg-white p-6 rounded-lg shadow-md w-96 h-62">
-      <h2 class="text-xl font-bold mb-4">Suggestions</h2>
+    <div class="bg-white p-6 rounded-lg shadow-md w-auto h-62 h-100">
+      <h2 class="text-xl font-bold mb-4">Word Suggestions</h2>
       <table
-        class="w-full border-collapse border border-gray-300 overflow-y-auto block max-h-40"
+        class="w-full border-collapse border border-gray-300 overflow-y-auto block max-h-78"
       >
         <thead>
           <tr class="bg-gray-200">
@@ -114,7 +124,9 @@ const changeUserBlockStatus = (user_id: number, is_blocked: boolean) => {
             :key="word.content"
             class="text-center"
           >
-            <td class="border border-gray-300 px-4 py-2">{{ word.content }}</td>
+            <td :title="word.content" class="border border-gray-300 px-4 py-2">
+              {{ trimWord(word.content) }}
+            </td>
             <td class="border border-gray-300 px-4 py-2">
               {{ word.is_approved ? 'YES' : 'NO' }}
             </td>
@@ -132,33 +144,75 @@ const changeUserBlockStatus = (user_id: number, is_blocked: boolean) => {
       </table>
     </div>
 
-    <div class="bg-white p-6 rounded-lg shadow-md w-96">
-      <h2 class="text-xl font-bold mb-4">Game History</h2>
-      <table class="w-full border-collapse border border-gray-300">
+    <div class="bg-white p-6 rounded-lg shadow-md w-auto h-100">
+      <h2 class="text-xl font-bold mb-4">User's Collections</h2>
+      <table
+        class="w-full border-collapse border border-gray-300 overflow-y-auto block max-h-78"
+      >
         <thead>
           <tr class="bg-gray-200">
-            <th class="border border-gray-300 px-4 py-2">Game</th>
-            <th class="border border-gray-300 px-4 py-2">Result</th>
-            <th class="border border-gray-300 px-4 py-2">Date</th>
+            <th class="border border-gray-300 px-4 py-2">Name</th>
+            <th class="border border-gray-300 px-4 py-2">Approved</th>
+            <th class="border border-gray-300 px-4 py-2">Type</th>
           </tr>
         </thead>
         <tbody>
           <tr
-            v-for="(history, index) in gameHistory"
-            :key="index"
+            v-for="(collection, idx) in user.created_categories"
+            :key="collection.category_name + idx"
             class="text-center"
           >
-            <td class="border border-gray-300 px-4 py-2">{{ history.game }}</td>
-            <td class="border border-gray-300 px-4 py-2">
-              {{ history.result }}
+            <td
+              :title="collection.category_name"
+              class="border border-gray-300 px-4 py-2"
+            >
+              {{ trimWord(collection.category_name) }}
             </td>
-            <td class="border border-gray-300 px-4 py-2">{{ history.date }}</td>
+            <td class="border border-gray-300 px-4 py-2">
+              {{ collection.is_approved ? 'YES' : 'NO' }}
+            </td>
+            <td class="border border-gray-300 px-4 py-2 h-14">
+              <select
+                :value="collection.category_type"
+                @change="
+                  (event: Event) => {
+                    const target = event.target as HTMLSelectElement;
+                    const newValue = target.value;
+                    target.value = collection.category_type;
+                    postUpdateCategoryType(
+                      collection.category_id,
+                      newValue as CategoryType,
+                    )
+                      .then(() => {
+                        target.value = newValue;
+                      })
+                      .catch((err) => {
+                        toast.error(err.message);
+                      });
+                  }
+                "
+                v-if="
+                  myUser?.user?.role === 'ADMIN' &&
+                  collection.category_type !== CategoryType.LOCAL_LOCAL
+                "
+                class="w-full p-2 border rounded"
+              >
+                <option :value="CategoryType.LOCAL_PUBLIC">Custom</option>
+                <option :value="CategoryType.PUBLIC_PUBLIC">Public</option>
+              </select>
+              {{
+                myUser?.user?.role !== 'ADMIN' ||
+                collection.category_type === CategoryType.LOCAL_LOCAL
+                  ? userReadableCollectionType(collection.category_type)
+                  : null
+              }}
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <div class="bg-white p-6 rounded-lg shadow-md w-96">
+    <!-- <div class="bg-white p-6 rounded-lg shadow-md w-96">
       <h2 class="text-xl font-bold mb-4">Game History</h2>
       <table class="w-full border-collapse border border-gray-300">
         <thead>
@@ -182,6 +236,6 @@ const changeUserBlockStatus = (user_id: number, is_blocked: boolean) => {
           </tr>
         </tbody>
       </table>
-    </div>
+    </div> -->
   </div>
 </template>

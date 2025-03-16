@@ -1,4 +1,4 @@
-import type { UserStore, WordStore } from '@/types/data';
+import type { CategoryType, UserStore, WordStore } from '@/types/data';
 import axios from 'axios';
 import type { CreateCategoryReq, GetAllCollectionsRes } from './interfaces';
 
@@ -128,6 +128,72 @@ export const postChangeUserBlockStatus = async (
   } catch (error: any) {
     throw new Error(
       error?.response?.data?.message || 'Could not update the word status',
+    );
+  }
+};
+
+export const getAllCollectionsToSuggest = async () => {
+  try {
+    const response = await apiClient.get<GetAllCollectionsRes>(
+      'categories/get-user-available',
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(
+      error?.response?.data?.message || 'Could not fetch collections',
+    );
+  }
+};
+
+export const getCollectionsByUser = async () => {
+  try {
+    const response = await apiClient.get<GetAllCollectionsRes>(
+      'categories/get-user-available',
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(
+      error?.response?.data?.message || 'Could not fetch collections',
+    );
+  }
+};
+
+export const postSuggestOneWord = async (
+  content: string,
+  categoryId: number,
+) => {
+  try {
+    const response = await apiClient.post<{ message: string }>(
+      'categories/suggest-one-word',
+      {
+        content,
+        categoryId,
+      },
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(
+      error?.response?.data?.message || 'Could not suggest the word',
+    );
+  }
+};
+
+export const postUpdateCategoryType = async (
+  categoryId: number,
+  type: CategoryType,
+) => {
+  try {
+    const response = await apiClient.post<{ message: string }>(
+      'categories/change-type',
+      {
+        categoryId,
+        newType: type,
+      },
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(
+      error?.response?.data?.message || 'Could not update the category type',
     );
   }
 };
