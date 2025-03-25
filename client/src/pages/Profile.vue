@@ -211,31 +211,5 @@ const userReadableCollectionType = (type: CategoryType) => {
         </tbody>
       </table>
     </div>
-
-    <!-- <div class="bg-white p-6 rounded-lg shadow-md w-96">
-      <h2 class="text-xl font-bold mb-4">Game History</h2>
-      <table class="w-full border-collapse border border-gray-300">
-        <thead>
-          <tr class="bg-gray-200">
-            <th class="border border-gray-300 px-4 py-2">Game</th>
-            <th class="border border-gray-300 px-4 py-2">Result</th>
-            <th class="border border-gray-300 px-4 py-2">Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(history, index) in gameHistory"
-            :key="index"
-            class="text-center"
-          >
-            <td class="border border-gray-300 px-4 py-2">{{ history.game }}</td>
-            <td class="border border-gray-300 px-4 py-2">
-              {{ history.result }}
-            </td>
-            <td class="border border-gray-300 px-4 py-2">{{ history.date }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div> -->
   </div>
 </template>

@@ -1,6 +1,10 @@
 import type { CategoryType, UserStore, WordStore } from '@/types/data';
 import axios from 'axios';
-import type { CreateCategoryReq, GetAllCollectionsRes } from './interfaces';
+import type {
+  CreateCategoryReq,
+  CreateLobbyReq,
+  GetAllCollectionsRes,
+} from './interfaces';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -195,5 +199,17 @@ export const postUpdateCategoryType = async (
     throw new Error(
       error?.response?.data?.message || 'Could not update the category type',
     );
+  }
+};
+
+export const postCreateLobby = async (data: CreateLobbyReq) => {
+  try {
+    const response = await apiClient.post<{ lobby_uuid: string }>(
+      'lobbies/create',
+      data,
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error?.response?.data?.message || 'Could not create lobby');
   }
 };

@@ -15,7 +15,7 @@ export class Game {
   @PrimaryGeneratedColumn()
   game_id: number;
 
-  @ManyToOne(() => Lobby, (lobby) => lobby.games)
+  @ManyToOne(() => Lobby, (lobby) => lobby.games, { nullable: true })
   @JoinColumn({ name: 'winner_lobby_id' })
   winner_lobby_id: Lobby;
 

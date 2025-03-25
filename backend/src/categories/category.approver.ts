@@ -15,7 +15,7 @@ export class CategoryWordApprover {
     private readonly configService: ConfigService,
   ) {}
 
-  @Cron(CronExpression.EVERY_5_SECONDS)
+  @Cron(CronExpression.EVERY_10_MINUTES)
   async runWordApprover() {
     const MODEL_URL: string = this.configService.get('MODEL_HTTP_SERVER')!;
     await firstValueFrom(
@@ -47,7 +47,7 @@ export class CategoryWordApprover {
     );
   }
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_10_MINUTES)
   async runCategoryApprover() {
     const categories = await this.categoryService.findUnapproved();
     void this.categoryService.updateMany(

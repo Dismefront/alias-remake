@@ -1,3 +1,4 @@
+import { Session } from 'express-session';
 import { User } from 'src/users/user.entity';
 
 declare module 'express-session' {
@@ -9,5 +10,13 @@ declare module 'express-session' {
 declare module 'express' {
   interface Request {
     user: User;
+  }
+}
+
+declare module 'http' {
+  interface IncomingMessage {
+    session: Session & {
+      user?: User;
+    };
   }
 }

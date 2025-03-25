@@ -9,6 +9,7 @@ import { useUserStore } from '@/services/userStore';
 import Profile from '@/pages/Profile.vue';
 import LobbyCreate from '@/pages/LobbyCreate.vue';
 import CreateCollection from '@/pages/CreateCollection.vue';
+import PlayLobby from '@/pages/PlayLobby.vue';
 
 export const ROUTE_NAMES = {
   HOME: 'Home',
@@ -16,6 +17,7 @@ export const ROUTE_NAMES = {
   PROFILE: 'Profile',
   LOBBY_CREATE: 'Create lobby',
   COLLECTION_CREATE: 'Create collection',
+  JOIN_LOBBY: 'Join lobby',
 };
 
 const routes: Array<RouteRecordRaw> = [
@@ -46,6 +48,12 @@ const routes: Array<RouteRecordRaw> = [
     path: '/collection/create',
     name: ROUTE_NAMES.COLLECTION_CREATE,
     component: CreateCollection,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/play/:lobbyId',
+    name: ROUTE_NAMES.JOIN_LOBBY,
+    component: PlayLobby,
     meta: { requiresAuth: true },
   },
 ];

@@ -69,4 +69,10 @@ export class Lobby {
 
   @OneToMany(() => Message, (message) => message.lobby_id)
   messages: Message[];
+
+  @OneToMany(() => User, (user) => user.lobbies)
+  members: User[];
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  created_at: Date;
 }
