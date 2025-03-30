@@ -10,7 +10,7 @@ export class GameStats {
   @Column({ default: 0 })
   guessed_word_count: number;
 
-  @OneToMany(() => Game, (game) => game.game_stats_id)
+  @OneToMany(() => Game, (game) => game.game_stats)
   games: Game[];
 
   @OneToMany(() => GuessedWord, (guessedWord) => guessedWord.game_stats_id)

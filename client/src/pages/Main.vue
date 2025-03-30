@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ROUTE_NAMES } from '@/router';
 import { useUserStore } from '@/services/userStore';
+import JoinLobbyModal from '@/widgets/join-lobby/JoinLobbyModal.vue';
 import SuggestWordModal from '@/widgets/suggets-word/SuggestWordModal.vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -12,18 +13,7 @@ const goToProfile = () => {
 };
 
 const showSuggestModal = ref<boolean>(false);
-
-const handleClose = () => {
-  showSuggestModal.value = false;
-};
-
-const handleOpen = () => {
-  showSuggestModal.value = true;
-};
-
-const handleSubmit = () => {
-  showSuggestModal.value = false;
-};
+const showJoinLobbyModal = ref<boolean>(false);
 
 const userStore = useUserStore();
 </script>
@@ -47,6 +37,7 @@ const userStore = useUserStore();
       </button>
       <button
         class="cursor-pointer w-full bg-green-500 text-white py-2 rounded-md"
+        @click="showJoinLobbyModal = true"
       >
         Join Lobby
       </button>
@@ -58,16 +49,22 @@ const userStore = useUserStore();
       </button>
       <button
         class="cursor-pointer w-full bg-purple-500 text-white py-2 rounded-md"
-        @click="handleOpen"
+        @click="showSuggestModal = true"
       >
         Propose
       </button>
     </div>
     <SuggestWordModal
       v-if="showSuggestModal"
-      @close="handleClose"
-      @open="handleOpen"
-      @submit="handleSubmit"
+      @close="showSuggestModal = false"
+      @open="showSuggestModal = true"
+      @submit="showSuggestModal = false"
+    />
+    <JoinLobbyModal
+      v-if="showJoinLobbyModal"
+      @close="showJoinLobbyModal = false"
+      @open="showJoinLobbyModal = true"
+      @submit="showJoinLobbyModal = false"
     />
   </div>
 </template>

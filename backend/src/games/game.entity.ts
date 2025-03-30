@@ -17,7 +17,7 @@ export class Game {
 
   @ManyToOne(() => Lobby, (lobby) => lobby.games, { nullable: true })
   @JoinColumn({ name: 'winner_lobby_id' })
-  winner_lobby_id: Lobby;
+  winner_lobby: Lobby;
 
   @ManyToOne(() => Lobby, (lobby) => lobby.games)
   @JoinColumn({ name: 'lobby_id' })
@@ -25,7 +25,7 @@ export class Game {
 
   @ManyToOne(() => GameStats, (gameStats) => gameStats.games)
   @JoinColumn({ name: 'game_stats_id' })
-  game_stats_id: GameStats;
+  game_stats: GameStats;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   start_time: Date;

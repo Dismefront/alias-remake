@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { User } from 'src/users/user.entity';
 import { Category } from 'src/categories/category.entity';
 import { randomUUID } from 'crypto';
+import { LobbyInGame } from './in-game-lobby.entity';
 
 @Injectable()
 export class LobbyService {
@@ -13,7 +14,7 @@ export class LobbyService {
     @Inject(REPOSITORIES.lobby) private lobbyRepository: Repository<Lobby>,
   ) {}
 
-  private lobbyInstances = new Map<string, Lobby>();
+  private lobbyInstances = new Map<string, LobbyInGame>();
 
   async createMasterOne(
     createLobbyReq: CreateLobbyReq,
