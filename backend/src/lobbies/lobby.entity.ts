@@ -53,7 +53,7 @@ export class Lobby {
   @JoinColumn({ name: 'master_id' })
   master_id: Lobby;
 
-  @OneToMany(() => Game, (game) => game.lobby_id)
+  @OneToMany(() => Game, (game) => game.lobby)
   games: Game[];
 
   @ManyToMany(() => Category, (category) => category.lobbies)

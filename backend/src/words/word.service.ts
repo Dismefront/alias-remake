@@ -1,10 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { REPOSITORIES } from 'src/configs/constants';
-import { IsNull, Repository } from 'typeorm';
+import { DataSource, IsNull, Repository } from 'typeorm';
 import { Word } from './word.entity';
 import { GuessedWord } from './guessed-word.entity';
 import { User } from 'src/users/user.entity';
 import { Category } from 'src/categories/category.entity';
+import { WordInGame } from './word-in-game.entity';
 
 @Injectable()
 export class WordService {
@@ -12,6 +13,8 @@ export class WordService {
     @Inject(REPOSITORIES.word) private wordRepository: Repository<Word>,
     @Inject(REPOSITORIES.guessedWord)
     private guessedWordRepository: Repository<GuessedWord>,
+    @Inject('DATA_SOURCE')
+    private readonly dataSource: DataSource,
   ) {}
 
   async save(content: string, suggested_by: User) {
@@ -72,5 +75,14 @@ export class WordService {
         is_approved: IsNull(),
       },
     });
+  }
+
+  async getRandomFromCategory(category_id: number) {
+    return (
+      await this.dataSource.query<WordInGame[]>(
+        'SELECT * FROM get_random_word_by_category($1)',
+        [category_id],
+      )
+    )[0];
   }
 }

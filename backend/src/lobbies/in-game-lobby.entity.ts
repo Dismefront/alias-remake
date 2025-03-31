@@ -1,6 +1,6 @@
 import { UserInGame } from 'src/users/in-game-user.entity';
-import { Word } from 'src/words/word.entity';
 import { Lobby } from './lobby.entity';
+import { WordInGame } from 'src/words/word-in-game.entity';
 
 export class LobbyInGame extends Lobby {
   hostTeamId?: number;
@@ -12,5 +12,5 @@ export class Team {
   id: number;
   members: UserInGame[];
   currentHost: number;
-  wordsGuessed: Word[];
+  wordsGuessed: WordInGame[];
 }

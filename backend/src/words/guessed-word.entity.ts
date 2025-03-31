@@ -10,7 +10,7 @@ export class GuessedWord {
 
   @ManyToOne(() => GameStats, (gameStats) => gameStats.guessed_words)
   @JoinColumn({ name: 'game_stats_id' })
-  game_stats_id: GameStats;
+  game_stats: GameStats;
 
   @ManyToOne(() => Word, (word) => word.guessed_words)
   @JoinColumn({ name: 'word_id' })

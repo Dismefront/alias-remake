@@ -111,3 +111,34 @@ DB_PORT=
 SESSION_SECRET=
 MODEL_HTTP_SERVER=
 ```
+
+### Database schema scripts(migration)
+
+```sql
+-- list all triggers
+SELECT event_object_table AS table_name,
+       trigger_name,
+       event_manipulation AS event,
+       action_statement AS definition
+FROM information_schema.triggers;
+
+-- get the trigger name
+SELECT tgname AS trigger_name,
+       pg_catalog.pg_get_triggerdef(oid) AS trigger_definition
+FROM pg_trigger where tgname like 'trg_set_is_blocked';
+
+-- get all functions
+SELECT p.proname AS function_name,
+       pg_catalog.pg_get_function_result(p.oid) AS return_type,
+       pg_catalog.pg_get_function_arguments(p.oid) AS arguments,
+       p.prosrc AS function_body,
+       n.nspname AS schema_name
+FROM pg_proc p
+JOIN pg_namespace n ON p.pronamespace = n.oid
+WHERE n.nspname NOT IN ('pg_catalog', 'information_schema');
+
+-- get function definition
+SELECT pg_get_functiondef(oid)
+FROM pg_proc
+WHERE proname = 'your_function_name';
+```

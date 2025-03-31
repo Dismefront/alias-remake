@@ -5,6 +5,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { GameStats } from './game-stats.entity';
@@ -21,9 +22,9 @@ export class Game {
 
   @ManyToOne(() => Lobby, (lobby) => lobby.games)
   @JoinColumn({ name: 'lobby_id' })
-  lobby_id: Lobby;
+  lobby: Lobby;
 
-  @ManyToOne(() => GameStats, (gameStats) => gameStats.games)
+  @OneToOne(() => GameStats, (gameStats) => gameStats.game)
   @JoinColumn({ name: 'game_stats_id' })
   game_stats: GameStats;
 
