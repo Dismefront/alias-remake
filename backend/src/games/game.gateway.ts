@@ -211,14 +211,17 @@ export class GameGateway
       temps.words = [];
     }
     if (
-      lobby.teams![lobby.teams!.length + (lobby.hostTeamId! - 1)].wordsGuessed
+      lobby.teams![
+        (lobby.teams!.length + (lobby.hostTeamId! - 1)) % lobby.teams!.length
+      ].wordsGuessed
     ) {
       lobby.teams![
-        lobby.teams!.length + (lobby.hostTeamId! - 1)
+        (lobby.teams!.length + (lobby.hostTeamId! - 1)) % lobby.teams!.length
       ].wordsGuessed.push(...temps.words.filter((w) => w.guessed_approved));
     } else {
-      lobby.teams![lobby.teams!.length + (lobby.hostTeamId! - 1)].wordsGuessed =
-        [...temps.words.filter((w) => w.guessed_approved)];
+      lobby.teams![
+        (lobby.teams!.length + (lobby.hostTeamId! - 1)) % lobby.teams!.length
+      ].wordsGuessed = [...temps.words.filter((w) => w.guessed_approved)];
     }
     temps.words = [];
   }
@@ -262,14 +265,21 @@ export class GameGateway
     if (temps.is_round_going) {
       return;
     }
-    if (temps.rounds_left === 0 && lobby?.is_game_going) {
+    if (
+      temps.rounds_left === 0 &&
+      lobby!.hostTeamId === 0 &&
+      lobby?.is_game_going
+    ) {
       await this.finishGameForLobby(lobby, lobbyId, temps);
       return;
     }
     this.updateTeamGuessedWords(lobby!, temps);
     if (lobby!.hostTeamId === 0) {
       if (
-        lobby?.teams?.find((x) => x.wordsGuessed.length >= lobby.goal_points)
+        temps.rounds_left === 0 &&
+        lobby?.teams?.find(
+          (x) => (x.wordsGuessed ?? []).length >= lobby.goal_points,
+        )
       ) {
         await this.finishGameForLobby(lobby, lobbyId, temps);
         return;

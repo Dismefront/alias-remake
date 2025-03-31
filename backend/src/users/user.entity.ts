@@ -1,7 +1,13 @@
 import { Message } from 'src/data/message.entity';
 import { Recording } from 'src/data/recordings.entity';
 import { Lobby } from 'src/lobbies/lobby.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { UserBlock } from './user-block.entity';
 import { GuessedWord } from 'src/words/guessed-word.entity';
 import { Category } from 'src/categories/category.entity';
@@ -29,6 +35,9 @@ export class User {
   created_at: Date;
 
   @OneToMany(() => Lobby, (lobby) => lobby.created_by)
+  created_lobbies: Lobby[];
+
+  @ManyToMany(() => Lobby, (lobby) => lobby.members)
   lobbies: Lobby[];
 
   @OneToMany(() => UserBlock, (block) => block.blocked_by)

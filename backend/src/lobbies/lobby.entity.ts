@@ -70,7 +70,12 @@ export class Lobby {
   @OneToMany(() => Message, (message) => message.lobby_id)
   messages: Message[];
 
-  @OneToMany(() => User, (user) => user.lobbies)
+  @ManyToMany(() => User, (user) => user.lobbies)
+  @JoinTable({
+    name: 'is_cw_lobby_members',
+    joinColumn: { name: 'lobby_id', referencedColumnName: 'lobby_id' },
+    inverseJoinColumn: { name: 'user_id', referencedColumnName: 'user_id' },
+  })
   members: User[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

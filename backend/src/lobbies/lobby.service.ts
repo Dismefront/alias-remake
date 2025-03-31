@@ -100,8 +100,9 @@ export class LobbyService {
           (member) => ({ user_id: member.user_id }) as UserInGame,
         );
         slaveLobby.password = lobby.password;
-        const savedLobbyId = (await this.lobbyRepository.insert(slaveLobby))
-          .identifiers[0].lobby_id as number;
+        console.log('nigga', slaveLobby);
+        const savedLobbyId = (await this.lobbyRepository.save(slaveLobby))
+          .lobby_id;
         if (winnerLobbyIdLocal === team.id) {
           winnerLobbyId = savedLobbyId;
         }

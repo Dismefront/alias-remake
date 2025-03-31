@@ -85,4 +85,15 @@ export class WordService {
       )
     )[0];
   }
+
+  async getGameResultsByUserId(user_id: number) {
+    return await this.dataSource.query<
+      {
+        lobby_name: string;
+        start_time: Date;
+        end_time: Date;
+        lobby_id: number;
+      }[]
+    >('SELECT * FROM get_user_game_results($1)', [user_id]);
+  }
 }

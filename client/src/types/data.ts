@@ -38,6 +38,7 @@ export interface Word {
   is_approved: boolean;
   suggested_by?: UserStore;
   categories?: CollectionStore[];
+  guessed_approved: boolean;
 }
 
 export interface Team {
@@ -64,4 +65,12 @@ export interface Lobby {
   members: UserStore[];
   created_at: Date;
   teams?: Team[];
+  hostTeamId?: number;
+}
+
+export interface RoundInfo {
+  is_round_going: boolean;
+  leftSeconds: number;
+  words: Word[];
+  rounds_left: number;
 }

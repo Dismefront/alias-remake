@@ -8,7 +8,7 @@ import { useRouter } from 'vue-router';
 const lobbyName = ref('');
 const password = ref('');
 const isPrivate = ref(false);
-const roundTime = ref(30);
+const roundTime = ref(7);
 const goalPoints = ref(1);
 const maxRounds = ref(1);
 const categories = ref(-1);
@@ -106,7 +106,7 @@ onBeforeMount(() => {
         <input
           v-model="roundTime"
           type="range"
-          min="30"
+          min="7"
           max="120"
           step="30"
           class="w-full"

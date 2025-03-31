@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ROUTE_NAMES } from '@/router';
+import { getUserLastResults } from '@/services/api';
 import { useUserStore } from '@/services/userStore';
 import JoinLobbyModal from '@/widgets/join-lobby/JoinLobbyModal.vue';
 import SuggestWordModal from '@/widgets/suggets-word/SuggestWordModal.vue';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -15,7 +16,17 @@ const goToProfile = () => {
 const showSuggestModal = ref<boolean>(false);
 const showJoinLobbyModal = ref<boolean>(false);
 
+const lastData = ref<any>(null);
+
+onMounted(() => {
+  getUserLastResults().then((data) => {
+    lastData.value = data;
+  });
+});
+
 const userStore = useUserStore();
+
+const formatTime = (time: Date) => new Date(time).toLocaleString();
 </script>
 
 <template>
@@ -53,6 +64,14 @@ const userStore = useUserStore();
       >
         Propose
       </button>
+    </div>
+    <div v-if="lastData" class="border p-4 rounded-lg shadow-md bg-white">
+      <h2 class="text-lg font-semibold">Latest Wins</h2>
+      <div v-for="el in lastData">
+        <p><strong>Lobby Name:</strong> {{ el.lobby_name }}</p>
+        <p><strong>Start Time:</strong> {{ formatTime(el.start_time) }}</p>
+        <p><strong>End Time:</strong> {{ formatTime(el.end_time) }}</p>
+      </div>
     </div>
     <SuggestWordModal
       v-if="showSuggestModal"

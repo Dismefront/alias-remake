@@ -1,6 +1,14 @@
-import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { WordService } from './word.service';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { AppAuthGuard } from 'src/auth/auth.guard';
 import { AdminOnly } from 'src/auth/admin-only.guard';
 
@@ -17,5 +25,12 @@ export class WordController {
   ) {
     await this.wordService.updateStatus(body.word_id, body.is_approved);
     res.send('ok');
+  }
+
+  @Get('last-results')
+  async getLastResults(@Res() res: Response, @Req() req: Request) {
+    const userId = req.session.user!.user_id!;
+    const results = await this.wordService.getGameResultsByUserId(userId);
+    res.json(results);
   }
 }

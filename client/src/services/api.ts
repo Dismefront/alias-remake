@@ -213,3 +213,15 @@ export const postCreateLobby = async (data: CreateLobbyReq) => {
     throw new Error(error?.response?.data?.message || 'Could not create lobby');
   }
 };
+
+export const getUserLastResults = async () => {
+  try {
+    const response = await apiClient.get<{
+      lobby_name: string;
+      end_time: Date;
+    }>('word/last-results');
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error?.response?.data?.message || 'Could not create lobby');
+  }
+};
